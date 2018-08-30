@@ -9,13 +9,19 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DBConnection {
-	List parkingSpaceInfo = new ArrayList();
-	Iterator itr;
+	private static final String URL = "jdbc:mysql://localhost:3306/parking_space";
+	private static final String USER = "root";
+	private static final String PASS = "";
+	private Connection con = null;
+	private PreparedStatement stmt = null;
+	private ResultSet rs = null;
+	private List parkingSpaceInfo = new ArrayList();
+	private Iterator itr = null;
 	
 	public void displayDB() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/parking_space","root","");
+			Connection con = DriverManager.getConnection(URL, USER, PASS);
 			PreparedStatement stmt = con.prepareStatement("Select * from space_1");
 			ResultSet rs = stmt.executeQuery();
 			
@@ -39,9 +45,16 @@ public class DBConnection {
 				
 			}	
 					
-		}catch(Exception e){ System.out.println(e);}  
-		}
+		}catch(Exception e) { 
+			System.out.println(e); 
+		}  
+	}
 	
+	public void createFine() {
+		
+	}
 	
-
+	public void increaseFine() {
+		
+	}
 }
