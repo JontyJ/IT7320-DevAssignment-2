@@ -1,8 +1,10 @@
 package IT7320.Assignment2;
 
 import java.io.FileNotFoundException;
+import java.util.Random;
 
 import DBConnection.DBConnection;
+import ParkingSystem.ParseRego;
 import ParkingSystem.Sensor;
 import ParkingSystem.StopWatch;
 
@@ -11,8 +13,8 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		boolean vacant = true; 		//Assuming park is free
-		String rego = "HYEDFR";		//Assuming license plate number
-		
+		String rego = new ParseRego().getRego();
+
 		long timeParkedStart = new StopWatch().Start(); 	//Start stop watch
 		boolean sensor = new Sensor().fillPark(vacant);		//Fill park
 		
@@ -25,7 +27,7 @@ public class Main {
 		sensor = new Sensor().freePark(vacant);		//Free park
 		int totalTimeParked = (int) new StopWatch().elapsedTime();		//Stop the stop watch and get the elapsed time
 		
-		//Insert everything into the database
+		// Insert everything into the database
 		DBConnection test = new DBConnection();
 		test.Insert(rego, totalTimeParked, sensor);
 	}
