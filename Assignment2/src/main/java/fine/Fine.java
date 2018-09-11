@@ -2,6 +2,8 @@ package fine;
 
 import java.sql.Time;
 
+import DBConnection.DBConnection;
+
 
 public class Fine {
 	private static final double LESS_THAN_30M = 12.00;
@@ -23,25 +25,25 @@ public class Fine {
 	}
 	
 	/**
-	 * public static double increaseFine( long time )
+	 * public static void increaseFine( long time )
 	 * Purpose: Receives a calculated over-stay time represented as a long. 30 minutes = 1800000, 60 minutes = 3600000
 	 *          120 minutes = 7200000, 240 minutes = 14400000 and 360 minutes = 21600000. Based on the fines retrieved from
 	 *          http://www.huttcity.govt.nz/Services/Roads-and-parking/Fees-and-charges/ retrieved on August 2018,the method 
 	 *          returns the according value as a double.
 	 * Input: time as long
-	 * Outputs: fine as double
+	 * Outputs: NULL
 	 */
-	public static double increaseFine( long time ) {
+	public static void increaseFine( long time ) {
 		if( time >= 1800000 && time < 3600000  )
-			return LESS_THAN_60M;
+			DBConnection.updateFine( LESS_THAN_60M );
 		else if ( time >= 3600000 && time < 7200000 )
-			return LESS_THAN_120M;
+			DBConnection.updateFine( LESS_THAN_120M );
 		else if ( time >= 7200000 && time < 14400000 )
-			return LESS_THAN_240M;
+			DBConnection.updateFine( LESS_THAN_240M );
 		else if ( time >= 14400000 && time < 21600000 )
-			return LESS_THAN_360M;
-		else
-			return OVER_360M;
+			DBConnection.updateFine( LESS_THAN_360M );
+		else if ( time >= 21600000 )
+			DBConnection.updateFine( LESS_THAN_120M );
 	}
 	
 	/**
@@ -71,10 +73,6 @@ public class Fine {
 		System.out.println( "Long representation of two hours: " + oneTwenty );
 		System.out.println( "Long representation of four hours: " + twoForty );
 		System.out.println( "Long representation of six hours: " + threeSixty );
-		
-		System.out.println( "\nTesting return of increaseFine method based on long\nSending 1800000: " + 
-                            Fine.increaseFine(thirty) + "\nSending 3600000: " + Fine.increaseFine(sixty) +
-                            "\nSending 7200000: " + Fine.increaseFine(oneTwenty) + "\nSending 14400000: " +
-                            Fine.increaseFine(twoForty) + "\nSending 21600000: " + Fine.increaseFine(threeSixty) );
+
 	}
 }

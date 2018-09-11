@@ -53,8 +53,9 @@ public class DBConnection {
 	public void createFine() {
 		
 	}
-	
-	public void increaseFine() {
+
+	public static void updateFine(double amount) {
+		// TODO Auto-generated method stub
 		
 	}
 }
