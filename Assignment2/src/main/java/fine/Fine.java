@@ -43,7 +43,7 @@ public class Fine {
 		else if ( time >= 14400000 && time < 21600000 )
 			DBConnection.updateFine( LESS_THAN_360M );
 		else if ( time >= 21600000 )
-			DBConnection.updateFine( LESS_THAN_120M );
+			DBConnection.updateFine( OVER_360M );
 	}
 	
 	/**
