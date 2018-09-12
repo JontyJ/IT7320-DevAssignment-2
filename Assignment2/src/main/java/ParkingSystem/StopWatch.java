@@ -7,7 +7,6 @@ public class StopWatch {
 		return start;
 	}
 
-
 	public double elapsedTime() {
 		long start = Start();
 		long end = System.currentTimeMillis();

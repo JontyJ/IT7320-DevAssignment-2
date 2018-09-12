@@ -79,7 +79,7 @@ public class DBConnection {
 			PreparedStatement stmt = con.prepareStatement("Insert into space_1(registration_number, time_parked, picture_arrival, picture_left, occupied)" + "values (?,?,?,?,?)");
 			
 			stmt.setString(1, rego);
-			stmt.setDouble(2, totalTimeParked);
+			stmt.setInt(2, totalTimeParked);
 			stmt.setBinaryStream(3, (InputStream) isArrival, (int)(pictureArrival.length()));
 			stmt.setBinaryStream(4, (InputStream) isLeft, (int)(pictureLeft.length()));
 			stmt.setBoolean(5, sensor);
