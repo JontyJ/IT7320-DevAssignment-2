@@ -1,6 +1,7 @@
 package IT7320.Assignment2;
 
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -21,12 +22,13 @@ public class Main {
 	 * Program demo using a randomised parking time which may fall under overstay. The actual implementation assumes an embedded timer running continuously
 	 * taking photographic evidence at every fine increment stage and updating the database accordingly
 	 * @throws ParseException 
+	 * @throws SQLException 
 	 */
-	public static void main(String[] args) throws FileNotFoundException, ParseException {
+	public static void main(String[] args) throws FileNotFoundException, ParseException, SQLException {
 		String park_id = "1001";
 		boolean vacant = true; 		//Assuming park is free
 		String rego = new ParseRego().getRego();
-		int freeParkingInMinutes = 120;
+		int freeParkingInMinutes = 60;
 		Timestamp start;
 		Timestamp finish;
 		Calendar calStart; 
@@ -35,7 +37,7 @@ public class Main {
 		boolean sensor = new Sensor().fillPark(vacant);		//Fill park
 		
 		start = new Timestamp( new Date().getTime() );		//Creates timestamp from system
-		System.out.println(start);
+		System.out.println( "Arrival timestamp: " + start );
 		
 		calStart = Calendar.getInstance();					//Creation of an instance of the calendar
 		calStart.setTimeInMillis(start.getTime());
@@ -45,16 +47,20 @@ public class Main {
 		test.Insert(park_id, rego, start, sensor);
 		
 		try {
-			System.out.println("Sleeping for 2 seconds");
+			System.out.println( "Sleeping for 2 seconds" );
 			Thread.sleep(2000);
 		} catch (InterruptedException ex) {
 			ex.printStackTrace();
 		}
 		
 		finish = new Timestamp( new Date().getTime() + new Sensor().timeParked() );		//Get randomized long for the time parked( Ranging from 1 minute to 6 hours )  
-		System.out.println(finish);
+		System.out.println( "Departure timestamp: " + finish );
 
-		sensor = new Sensor().freePark(sensor);				//Freeing park as the car leaves
+		sensor = new Sensor().freePark( vacant );
+		
+		DBConnection.updateParking( park_id, finish, sensor );
+		
+		sensor = new Sensor().freePark( sensor );				//Freeing park as the car leaves
 		
 		start = new Timestamp( calStart.getTime().getTime() );
 		

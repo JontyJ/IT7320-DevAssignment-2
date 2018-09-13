@@ -16,22 +16,23 @@ import java.util.Iterator;
 import java.util.List;
 
 import fine.Fine;
+import parkingSystem.LogAttributes;
 
 public class DBConnection {
 	private static final String URL = "jdbc:mysql://localhost:3306/parking_space";
 	private static final String USER = "root";
 	private static final String PASS = "";
-	private Connection con = null;
-	private PreparedStatement stmt = null;
-	private ResultSet rs = null;
+	private static Connection con = null;
+	private static PreparedStatement stmt = null;
+	private static ResultSet rs = null;
 	private List parkingSpaceInfo = new ArrayList();
 	private Iterator itr = null;
 	
 	public void displayDB() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection(URL, USER, PASS);
-			PreparedStatement stmt = con.prepareStatement("Select * from space_1");
+			con = DriverManager.getConnection(URL, USER, PASS);
+			stmt = con.prepareStatement("Select * from space_1");
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
@@ -59,7 +60,7 @@ public class DBConnection {
 		}  
 	}
 
-	public void createFine( String number_plate, File photo_evidence ) throws FileNotFoundException {
+	public void createFine( String number_plate, File photo_evidence, Timestamp timestamp ) throws FileNotFoundException {
 		try {
 			con = DriverManager.getConnection( URL, USER, PASS );
 			stmt = con.prepareStatement( "insert into fines ( parking_id, number_plate, 30m_photo_evidence, fine_amount ) values ( ?, ?, ?, ? )" );
@@ -87,11 +88,11 @@ public class DBConnection {
 		}
 	}
 
-	public static void updateFine(double amount) {
+	public static void updateFine( String number_plate, File photo_evidence, double amount ) {
 		
 	}
 	
-	public void Insert(String parking_space, String rego, Timestamp timestamp, boolean sensor) throws FileNotFoundException {
+	public void Insert(String parking_space, String rego, Timestamp timestamp, boolean sensor) throws FileNotFoundException, SQLException {
 
 		String success = "yay";
 		
@@ -103,7 +104,7 @@ public class DBConnection {
 		
 		//Connect to the db and insert all the data
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection(URL, USER, PASS);
 			//PreparedStatement stmt = con.prepareStatement("Insert into space_1(registration_number, picture_arrival, arrival_time, picture_left, occupied)" + "values (?,?,?,?,?)");
 			PreparedStatement stmt = con.prepareStatement("Insert into space_1(parking_space_id, registration_number, picture_arrival, arrival_time, occupied)" + "values (?,?,?,?,?)");
@@ -116,16 +117,96 @@ public class DBConnection {
 			stmt.setBoolean(5, sensor);
 			
 			stmt.executeUpdate();
-			
+			con.close();
+			stmt.close();
 			//Display yay if data is successfully inserted
 			System.out.println(success);
 			
-		}catch(Exception e){ System.out.println(e);}
-	
+		}catch(Exception e){ System.out.println(e);} 
 	}
 
-	public static void archive() {
-		// TODO Auto-generated method stub
+	public static void updateParking( String park_id, Timestamp finish, boolean sensor ) throws FileNotFoundException, SQLException {
+		File pictureDeparture = new File( "C:\\IT7320_Images\\new-zealand-02-plate.jpg" );
+		FileInputStream departure = new FileInputStream( pictureDeparture );
 		
+		try {
+			con = DriverManager.getConnection( URL, USER, PASS );
+			stmt = con.prepareStatement( "update space_1 set picture_left = ?, departure_time = ?, occupied = ? where parking_space_id = ?" );
+			stmt.setBinaryStream( 1, (InputStream)departure, (int)pictureDeparture.length() );
+			stmt.setTimestamp( 2, finish );
+			stmt.setBoolean( 3, sensor );
+			stmt.setString( 4, park_id );
+			
+			stmt.execute();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			con.close();
+			stmt.close();
+		}
+	}
+	
+	public static void archive() {
+		LogAttributes obj = null;
+		
+		try {
+			con = DriverManager.getConnection( URL, USER, PASS );
+			stmt = con.prepareStatement( "Select * from space_1" );
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				obj = new LogAttributes( rs.getString( "parking_space_id" ), rs.getString( "registration_number" ), rs.getBinaryStream( "picture_arrival" ), 
+						rs.getTimestamp( "arrival_time" ), rs.getBinaryStream( "picture_left" ), rs.getTimestamp( "departure_time" ) );
+			}
+			
+			con.close();
+			stmt.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		deleteEntry( obj.getParkingID() );
+		createLog( obj );
+	}
+
+	private static void createLog(LogAttributes obj) {
+		try {
+			con = DriverManager.getConnection( URL, USER, PASS );
+			stmt = con.prepareStatement( "insert into parking_log( parking_space, registration_number, picture_arrival, arrival_time, picture_left,"
+					+ "departure_time ) values ( ?, ?, ?, ?, ?, ? ) " );
+			
+			stmt.setString( 1, obj.getParkingID() );
+			stmt.setString( 2, obj.getNumberPlate() );
+			stmt.setBinaryStream( 3, obj.getArrival_image() );
+			stmt.setTimestamp( 4, obj.getArrival() );
+			stmt.setBinaryStream( 5, obj.getDeparture_image() );
+			stmt.setTimestamp( 6, obj.getDeparture() );
+			
+			stmt.execute();
+			
+			con.close();
+			stmt.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void deleteEntry(String parkingID) {
+		try {
+			con = DriverManager.getConnection( URL, USER, PASS );
+			stmt = con.prepareStatement( "delete from space_1 where parking_space_id = ?" );
+			
+			stmt.setString( 1, parkingID );
+			stmt.execute();
+			
+			con.close();
+			stmt.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
 	}
 }
