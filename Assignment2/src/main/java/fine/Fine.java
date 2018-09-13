@@ -32,7 +32,9 @@ public class Fine {
 	 * Outputs: fine as double
 	 */
 	public static double retrieveFineIncrease( long time ) {
-		if( time >= 1800000 && time < 3600000  )
+		if ( time > 0 && time < 1800000 )
+			return LESS_THAN_30M;
+		else if( time >= 1800000 && time < 3600000  )
 			return LESS_THAN_60M;
 		else if ( time >= 3600000 && time < 7200000 )
 			return LESS_THAN_120M;

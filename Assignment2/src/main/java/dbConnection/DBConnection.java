@@ -33,7 +33,7 @@ public class DBConnection {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(URL, USER, PASS);
 			stmt = con.prepareStatement("Select * from space_1");
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
 				System.out.println("Inside DB");
@@ -60,38 +60,35 @@ public class DBConnection {
 		}  
 	}
 
-	public void createFine( String number_plate, File photo_evidence, Timestamp timestamp ) throws FileNotFoundException {
+	public static void createFine( String parkingID, String number_plate, Timestamp start, Timestamp fineable, long overstay ) throws FileNotFoundException, SQLException {
+		File photo_start = new File("C:\\IT7320_Images\\new-zealand-01-plate.jpg");
+		FileInputStream p_start = new FileInputStream( photo_start );
+		File photo_evidence = new File("C:\\IT7320_Images\\new-zealand-02-plate.jpg");
+		FileInputStream p_evidence = new FileInputStream( photo_evidence );
+		
 		try {
 			con = DriverManager.getConnection( URL, USER, PASS );
-			stmt = con.prepareStatement( "insert into fines ( parking_id, number_plate, 30m_photo_evidence, fine_amount ) values ( ?, ?, ?, ? )" );
+			stmt = con.prepareStatement( "insert into fines ( parking_id, number_plate, timestamp_start, photo_start, fineable_timestamp, "
+					+ "fineable_evidence, fine_amount ) values ( ?, ?, ?, ?, ?, ?, ? )" );
 			
-			stmt.setInt( 1, 1001 );
+			stmt.setString( 1, parkingID );
 			stmt.setString( 2, number_plate );
+			stmt.setTimestamp( 3, start );
+			stmt.setBinaryStream( 4, (InputStream)p_start, (int)( photo_start.length() ) );
+			stmt.setTimestamp( 5, fineable );
+			stmt.setBinaryStream( 6, (InputStream)p_evidence, (int)( photo_evidence.length() ) );
+			stmt.setDouble( 7, Fine.retrieveFineIncrease( overstay ) );
 			
-			FileInputStream p_evidence = new FileInputStream( photo_evidence );
-			stmt.setBinaryStream(3, (InputStream)p_evidence, (int)( photo_evidence.length() ) );
-			stmt.setDouble( 4, Fine.retrieveFine() );
-			
-			stmt.executeQuery();
+			stmt.execute();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} finally {
-			try {
-				con.close();
-				stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}	
+			con.close();
+			stmt.close();
 		}
 	}
 
-	public static void updateFine( String number_plate, File photo_evidence, double amount ) {
-		
-	}
-	
 	public void Insert(String parking_space, String rego, Timestamp timestamp, boolean sensor) throws FileNotFoundException, SQLException {
 
 		String success = "yay";
@@ -105,15 +102,13 @@ public class DBConnection {
 		//Connect to the db and insert all the data
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection(URL, USER, PASS);
-			//PreparedStatement stmt = con.prepareStatement("Insert into space_1(registration_number, picture_arrival, arrival_time, picture_left, occupied)" + "values (?,?,?,?,?)");
-			PreparedStatement stmt = con.prepareStatement("Insert into space_1(parking_space_id, registration_number, picture_arrival, arrival_time, occupied)" + "values (?,?,?,?,?)");
+			con = DriverManager.getConnection(URL, USER, PASS);
+			stmt = con.prepareStatement("Insert into space_1(parking_space_id, registration_number, picture_arrival, arrival_time, occupied)" + "values (?,?,?,?,?)");
 			
 			stmt.setString(1, parking_space);
 			stmt.setString(2, rego);
 			stmt.setBinaryStream(3, (InputStream) isArrival, (int)(pictureArrival.length()));
 			stmt.setTimestamp(4, timestamp);
-			//stmt.setBinaryStream(4, (InputStream) isLeft, (int)(pictureLeft.length()));
 			stmt.setBoolean(5, sensor);
 			
 			stmt.executeUpdate();
@@ -153,7 +148,7 @@ public class DBConnection {
 		try {
 			con = DriverManager.getConnection( URL, USER, PASS );
 			stmt = con.prepareStatement( "Select * from space_1" );
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
 				obj = new LogAttributes( rs.getString( "parking_space_id" ), rs.getString( "registration_number" ), rs.getBinaryStream( "picture_arrival" ), 

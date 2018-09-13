@@ -2,20 +2,13 @@ package IT7320.Assignment2;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
-
 import dbConnection.DBConnection;
-import fine.Fine;
 import parkingSystem.ParseRego;
 import parkingSystem.Sensor;
-import parkingSystem.StopWatch;
 
 public class Main {
 	/**
@@ -62,9 +55,9 @@ public class Main {
 		
 		sensor = new Sensor().freePark( sensor );				//Freeing park as the car leaves
 		
-		start = new Timestamp( calStart.getTime().getTime() );
+		Timestamp temp = new Timestamp( calStart.getTime().getTime() );
 		
-		overstay = finish.getTime() - start.getTime();		//Calculating overstay
+		overstay = finish.getTime() - temp.getTime();		//Calculating overstay
 		int seconds = (int)overstay / 1000;
 		
 	    int hours = seconds / 3600;							//Converting to hour minutes and seconds
@@ -73,12 +66,7 @@ public class Main {
 		
 	    if( overstay > 0 ) {
 			System.out.println("Overstay: " + hours + "h " + minutes + "m " + seconds + "s. Creating fine entry.");
-//			//DBConnection.createFine();
-		}
-//		
-		if( overstay >= 1800000 ) {
-			System.out.println( "Overstay time is greater then 30 minutes, updating fine db entry." );
-//			//DBConnection.updateFine( Fine.retrieveFineIncrease( actualTimeParked - freeParking ) );
+			DBConnection.createFine( park_id, rego, start, finish, overstay );
 		}
 		
 		DBConnection.archive();
