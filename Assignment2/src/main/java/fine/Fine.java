@@ -40,8 +40,10 @@ public class Fine {
 			return LESS_THAN_240M;
 		else if ( time >= 14400000 && time < 21600000 )
 			return LESS_THAN_360M;
-		else
+		else if ( time >= 21600000 )
 			return OVER_360M;
+		else
+			return 0;
 	}
 	
 	/**

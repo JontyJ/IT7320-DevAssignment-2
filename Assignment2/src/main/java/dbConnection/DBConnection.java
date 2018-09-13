@@ -1,4 +1,4 @@
-package DBConnection;
+package dbConnection;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +9,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -89,26 +91,28 @@ public class DBConnection {
 		
 	}
 	
-	public void Insert(String rego, int totalTimeParked, boolean sensor) throws FileNotFoundException {
+	public void Insert(String parking_space, String rego, Timestamp timestamp, boolean sensor) throws FileNotFoundException {
 
 		String success = "yay";
 		
 		//Getting local images because we assume the camera at the car park will take pictures
-		File pictureArrival = new File("C:\\Users\\Jonty\\Desktop\\Crash_Bandicoot.png");
+		File pictureArrival = new File("C:\\IT7320_Images\\new-zealand-01-plate.jpg");
 		FileInputStream isArrival = new FileInputStream(pictureArrival);
-		File pictureLeft = new File("C:\\Users\\Jonty\\Desktop\\Crash_Bandicoot.png");
-		FileInputStream isLeft = new FileInputStream(pictureLeft);
+		//File pictureLeft = new File("C:\\Users\\Jonty\\Desktop\\Crash_Bandicoot.png");
+		//FileInputStream isLeft = new FileInputStream(pictureLeft);
 		
 		//Connect to the db and insert all the data
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection(URL, USER, PASS);
-			PreparedStatement stmt = con.prepareStatement("Insert into space_1(registration_number, time_parked, picture_arrival, picture_left, occupied)" + "values (?,?,?,?,?)");
+			//PreparedStatement stmt = con.prepareStatement("Insert into space_1(registration_number, picture_arrival, arrival_time, picture_left, occupied)" + "values (?,?,?,?,?)");
+			PreparedStatement stmt = con.prepareStatement("Insert into space_1(parking_space_id, registration_number, picture_arrival, arrival_time, occupied)" + "values (?,?,?,?,?)");
 			
-			stmt.setString(1, rego);
-			stmt.setInt(2, totalTimeParked);
+			stmt.setString(1, parking_space);
+			stmt.setString(2, rego);
 			stmt.setBinaryStream(3, (InputStream) isArrival, (int)(pictureArrival.length()));
-			stmt.setBinaryStream(4, (InputStream) isLeft, (int)(pictureLeft.length()));
+			stmt.setTimestamp(4, timestamp);
+			//stmt.setBinaryStream(4, (InputStream) isLeft, (int)(pictureLeft.length()));
 			stmt.setBoolean(5, sensor);
 			
 			stmt.executeUpdate();
@@ -118,5 +122,10 @@ public class DBConnection {
 			
 		}catch(Exception e){ System.out.println(e);}
 	
+	}
+
+	public static void archive() {
+		// TODO Auto-generated method stub
+		
 	}
 }
