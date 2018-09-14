@@ -41,13 +41,6 @@ public class Main {
 		DBConnection test = new DBConnection();
 		test.insert(park_id, rego, start, sensor);
 		
-		try {
-			System.out.println( "Sleeping for 2 seconds" );
-			Thread.sleep(2000);
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
-		}
-		
 		sensor = new Sensor().freePark( vacant );
 		
 		finish = new Timestamp( new Date().getTime() + new Sensor().timeParked() );		//Get randomized long for the time parked( Ranging from 1 minute to 6 hours )  

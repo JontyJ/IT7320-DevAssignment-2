@@ -22,7 +22,7 @@ public class Sensor {
 			return vacant;
 		}
 		else
-			System.out.println("Park is already free");
+			System.out.println("Park is free");
 			return vacant;		
 	}
 	

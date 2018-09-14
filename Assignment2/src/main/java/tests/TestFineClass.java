@@ -1,15 +1,21 @@
 package tests;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import dbConnection.DBConnection;
 import fine.Fine;
+import parkingSystem.ParseRego;
+import parkingSystem.Sensor;
 
 public class TestFineClass {
 	private Timestamp timestamp;
@@ -41,6 +47,34 @@ public class TestFineClass {
 		for( int i = 0; i < unexpectedFines.length; i++ ) {
 			assertNotEquals( unexpectedFines[ i ], Fine.retrieveFine( actualParkTime ) );
 		}
+		
+	}
+	
+	@Test
+	public void testSensorIsVacant() {
+		boolean vacant = true;
+		
+		boolean sensor = new Sensor().fillPark(vacant); 
+									//Fill the car park
+		assertThat(sensor, is(false)); 
+									//Check that the park is not empty
+	}
+	
+	@Test
+	public void testSensorIsNotVacant() {
+		boolean vacant = false;
+		
+		boolean sensor = new Sensor().freePark(vacant); 
+									//Free the car park
+		assertThat(sensor, is(true)); 
+									//Check that the car park is free
+	}
+
+	@Test
+	public void testRandomRegos() {
+		ParseRego testRegos = new ParseRego();
+		
+		assertNotNull(testRegos.getRego());
 	}
 	
 	@Test
@@ -58,6 +92,7 @@ public class TestFineClass {
 		}
 	}
 	
+
 	@Test
 	public void test21Fine() {
 		double[] unexpectedFines = { 0.0, 12.0, 15.0, 30.0, 42.0, 57.0 };
