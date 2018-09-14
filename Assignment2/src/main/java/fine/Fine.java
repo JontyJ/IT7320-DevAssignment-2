@@ -31,8 +31,10 @@ public class Fine {
 	 * Input: time as long
 	 * Outputs: fine as double
 	 */
-	public static double increaseFine( long time ) {
-		if( time >= 1800000 && time < 3600000  )
+	public static double retrieveFineIncrease( long time ) {
+		if ( time > 0 && time < 1800000 )
+			return LESS_THAN_30M;
+		else if( time >= 1800000 && time < 3600000  )
 			return LESS_THAN_60M;
 		else if ( time >= 3600000 && time < 7200000 )
 			return LESS_THAN_120M;
@@ -40,8 +42,10 @@ public class Fine {
 			return LESS_THAN_240M;
 		else if ( time >= 14400000 && time < 21600000 )
 			return LESS_THAN_360M;
-		else
+		else if ( time >= 21600000 )
 			return OVER_360M;
+		else
+			return 0;
 	}
 	
 	/**
@@ -73,8 +77,8 @@ public class Fine {
 		System.out.println( "Long representation of six hours: " + threeSixty );
 		
 		System.out.println( "\nTesting return of increaseFine method based on long\nSending 1800000: " + 
-                            Fine.increaseFine(thirty) + "\nSending 3600000: " + Fine.increaseFine(sixty) +
-                            "\nSending 7200000: " + Fine.increaseFine(oneTwenty) + "\nSending 14400000: " +
-                            Fine.increaseFine(twoForty) + "\nSending 21600000: " + Fine.increaseFine(threeSixty) );
+                            Fine.retrieveFineIncrease(thirty) + "\nSending 3600000: " + Fine.retrieveFineIncrease(sixty) +
+                            "\nSending 7200000: " + Fine.retrieveFineIncrease(oneTwenty) + "\nSending 14400000: " +
+                            Fine.retrieveFineIncrease(twoForty) + "\nSending 21600000: " + Fine.retrieveFineIncrease(threeSixty) );
 	}
 }
