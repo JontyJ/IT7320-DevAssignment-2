@@ -11,17 +11,7 @@ public class Fine {
 	private static final double LESS_THAN_360M = 42.00;
 	private static final double OVER_360M = 57.00;
 	
-	/**
-	 * public static double retrieveFine()
-	 * Purpose: Retrieves the initial fine value for DBConnection's createFine method
-	 * Input: NULL
-	 * Outputs: double
-	 * @return
-	 */
-	public static double retrieveFine() {
-		return LESS_THAN_30M;
-	}
-	
+
 	/**
 	 * public static double increaseFine( long time )
 	 * Purpose: Receives a calculated over-stay time represented as a long. 30 minutes = 1800000, 60 minutes = 3600000
