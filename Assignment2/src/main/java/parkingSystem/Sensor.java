@@ -1,4 +1,4 @@
-package parkingSystem;
+package ParkingSystem;
 
 import java.util.Random;
 
@@ -6,7 +6,7 @@ public class Sensor {
 	
 	//Fill park if the park is empty
 	public boolean fillPark( boolean vacant ) {
-		if ( vacant == true ) {
+		if ( vacant = true ) {
 			vacant = false;
 			return vacant;
 		}
@@ -17,7 +17,7 @@ public class Sensor {
 	
 	//Free park if the park is occupied
 	public boolean freePark( boolean vacant ) {
-		if ( vacant == false ) {
+		if ( vacant = false ) {
 			vacant = true;
 			return vacant;
 		}

@@ -1,4 +1,4 @@
-package parkingSystem;
+package ParkingSystem;
 
 import java.util.Random;
 
