@@ -1,4 +1,4 @@
-package ParkingSystem;
+package parkingSystem;
 
 public class StopWatch {
 	
