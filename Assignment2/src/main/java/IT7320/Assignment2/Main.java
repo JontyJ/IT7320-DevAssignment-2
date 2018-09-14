@@ -37,7 +37,7 @@ public class Main {
 		calStart.add(Calendar.MINUTE, freeParkingInMinutes);//Incrementing the calendar by the free parking time in minutes
 
 		DBConnection test = new DBConnection();
-		test.Insert(park_id, rego, start, sensor);
+		test.insert(park_id, rego, start, sensor);
 		
 		try {
 			System.out.println( "Sleeping for 2 seconds" );
@@ -46,10 +46,10 @@ public class Main {
 			ex.printStackTrace();
 		}
 		
+		sensor = new Sensor().freePark( vacant );
+		
 		finish = new Timestamp( new Date().getTime() + new Sensor().timeParked() );		//Get randomized long for the time parked( Ranging from 1 minute to 6 hours )  
 		System.out.println( "Departure timestamp: " + finish );
-
-		sensor = new Sensor().freePark( vacant );
 		
 		DBConnection.updateParking( park_id, finish, sensor );
 		
@@ -69,6 +69,6 @@ public class Main {
 			DBConnection.createFine( park_id, rego, start, finish, overstay );
 		}
 		
-		DBConnection.archive();
+		DBConnection.archive( park_id );
 	}
 }

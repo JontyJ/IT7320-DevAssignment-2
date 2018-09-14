@@ -26,12 +26,12 @@ public class Fine {
 	 * public static double increaseFine( long time )
 	 * Purpose: Receives a calculated over-stay time represented as a long. 30 minutes = 1800000, 60 minutes = 3600000
 	 *          120 minutes = 7200000, 240 minutes = 14400000 and 360 minutes = 21600000. Based on the fines retrieved from
-	 *          http://www.huttcity.govt.nz/Services/Roads-and-parking/Fees-and-charges/ retrieved on August 2018,the method 
+	 *          https://www.huttcity.govt.nz/Services/Roads-and-parking/Fees-and-charges/ retrieved on August 2018,the method 
 	 *          returns the according value as a double.
 	 * Input: time as long
 	 * Outputs: fine as double
 	 */
-	public static double retrieveFineIncrease( long time ) {
+	public static double retrieveFine( long time ) {
 		if ( time > 0 && time < 1800000 )
 			return LESS_THAN_30M;
 		else if( time >= 1800000 && time < 3600000  )
@@ -77,8 +77,8 @@ public class Fine {
 		System.out.println( "Long representation of six hours: " + threeSixty );
 		
 		System.out.println( "\nTesting return of increaseFine method based on long\nSending 1800000: " + 
-                            Fine.retrieveFineIncrease(thirty) + "\nSending 3600000: " + Fine.retrieveFineIncrease(sixty) +
-                            "\nSending 7200000: " + Fine.retrieveFineIncrease(oneTwenty) + "\nSending 14400000: " +
-                            Fine.retrieveFineIncrease(twoForty) + "\nSending 21600000: " + Fine.retrieveFineIncrease(threeSixty) );
+                            Fine.retrieveFine(thirty) + "\nSending 3600000: " + Fine.retrieveFine(sixty) +
+                            "\nSending 7200000: " + Fine.retrieveFine(oneTwenty) + "\nSending 14400000: " +
+                            Fine.retrieveFine(twoForty) + "\nSending 21600000: " + Fine.retrieveFine(threeSixty) );
 	}
 }

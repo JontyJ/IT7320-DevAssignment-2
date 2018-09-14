@@ -77,7 +77,7 @@ public class DBConnection {
 			stmt.setBinaryStream( 4, (InputStream)p_start, (int)( photo_start.length() ) );
 			stmt.setTimestamp( 5, fineable );
 			stmt.setBinaryStream( 6, (InputStream)p_evidence, (int)( photo_evidence.length() ) );
-			stmt.setDouble( 7, Fine.retrieveFineIncrease( overstay ) );
+			stmt.setDouble( 7, Fine.retrieveFine( overstay ) );
 			
 			stmt.execute();
 			
@@ -89,7 +89,7 @@ public class DBConnection {
 		}
 	}
 
-	public void Insert(String parking_space, String rego, Timestamp timestamp, boolean sensor) throws FileNotFoundException, SQLException {
+	public void insert(String parking_space, String rego, Timestamp timestamp, boolean sensor) throws FileNotFoundException, SQLException {
 
 		String success = "yay";
 		
@@ -142,12 +142,13 @@ public class DBConnection {
 		}
 	}
 	
-	public static void archive() {
+	public static void archive( String parkID ) {
 		LogAttributes obj = null;
 		
 		try {
 			con = DriverManager.getConnection( URL, USER, PASS );
-			stmt = con.prepareStatement( "Select * from space_1" );
+			stmt = con.prepareStatement( "Select * from space_1 where parking_space_id = ?" );
+			stmt.setString( 1, parkID );
 			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
