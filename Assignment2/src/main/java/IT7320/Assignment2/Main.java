@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+
 import dbConnection.DBConnection;
 import parkingSystem.ParseRego;
 import parkingSystem.Sensor;
@@ -18,6 +19,7 @@ public class Main {
 	 * @throws SQLException 
 	 */
 	public static void main(String[] args) throws FileNotFoundException, ParseException, SQLException {
+
 		String park_id = "1001";
 		boolean vacant = true; 		//Assuming park is free
 		String rego = new ParseRego().getRego();
@@ -38,13 +40,6 @@ public class Main {
 
 		DBConnection test = new DBConnection();
 		test.insert(park_id, rego, start, sensor);
-		
-		try {
-			System.out.println( "Sleeping for 2 seconds" );
-			Thread.sleep(2000);
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
-		}
 		
 		sensor = new Sensor().freePark( vacant );
 		

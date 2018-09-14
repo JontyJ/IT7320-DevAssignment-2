@@ -39,9 +39,10 @@ public class DBConnection {
 				System.out.println("Inside DB");
 				parkingSpaceInfo.add(rs.getInt("parking_space_id"));
 				parkingSpaceInfo.add(rs.getString("registration_number"));
-				parkingSpaceInfo.add(rs.getInt("time_parked"));
 				parkingSpaceInfo.add(rs.getBlob("picture_arrival"));
+				parkingSpaceInfo.add(rs.getTimestamp("arrival_time"));
 				parkingSpaceInfo.add(rs.getBlob("picture_left"));
+				parkingSpaceInfo.add(rs.getTimestamp("departure_time"));
 				parkingSpaceInfo.add(rs.getInt("occupied"));			
 			}
 			rs.close();
@@ -57,7 +58,7 @@ public class DBConnection {
 					
 		}catch(Exception e) { 
 			System.out.println(e); 
-		}  
+		}
 	}
 
 	public static void createFine( String parkingID, String number_plate, Timestamp start, Timestamp fineable, long overstay ) throws FileNotFoundException, SQLException {
@@ -91,8 +92,6 @@ public class DBConnection {
 
 	public void insert(String parking_space, String rego, Timestamp timestamp, boolean sensor) throws FileNotFoundException, SQLException {
 
-		String success = "yay";
-		
 		//Getting local images because we assume the camera at the car park will take pictures
 		File pictureArrival = new File("C:\\IT7320_Images\\new-zealand-01-plate.jpg");
 		FileInputStream isArrival = new FileInputStream(pictureArrival);
@@ -114,8 +113,6 @@ public class DBConnection {
 			stmt.executeUpdate();
 			con.close();
 			stmt.close();
-			//Display yay if data is successfully inserted
-			System.out.println(success);
 			
 		}catch(Exception e){ System.out.println(e);} 
 	}
