@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fine.Fine;
+import static org.hamcrest.CoreMatchers.*;
 
 public class TestFineClass {
 	private Timestamp timestamp;
@@ -41,6 +42,7 @@ public class TestFineClass {
 		for( int i = 0; i < unexpectedFines.length; i++ ) {
 			assertNotEquals( unexpectedFines[ i ], Fine.retrieveFine( actualParkTime ) );
 		}
+		assertThat( Fine.retrieveFine( actualParkTime ), is(12.0) );
 	}
 	
 	@Test
@@ -56,6 +58,7 @@ public class TestFineClass {
 		for( int i = 0; i < unexpectedFines.length; i++ ) {
 			assertNotEquals( unexpectedFines[ i ], Fine.retrieveFine( actualParkTime ) );
 		}
+		assertThat( Fine.retrieveFine( actualParkTime ), is(15.0) );
 	}
 	
 	@Test
@@ -71,6 +74,7 @@ public class TestFineClass {
 		for( int i = 0; i < unexpectedFines.length; i++ ) {
 			assertNotEquals( unexpectedFines[ i ], Fine.retrieveFine( actualParkTime ) );
 		}
+		assertThat( Fine.retrieveFine( actualParkTime ), is(21.0) );
 	}
 	
 	@Test
@@ -86,6 +90,7 @@ public class TestFineClass {
 		for( int i = 0; i < unexpectedFines.length; i++ ) {
 			assertNotEquals( unexpectedFines[ i ], Fine.retrieveFine( actualParkTime ) );
 		}
+		assertThat( Fine.retrieveFine( actualParkTime ), is(30.0) );
 	}
 	
 	@Test
@@ -101,6 +106,7 @@ public class TestFineClass {
 		for( int i = 0; i < unexpectedFines.length; i++ ) {
 			assertNotEquals( unexpectedFines[ i ], Fine.retrieveFine( actualParkTime ) );
 		}
+		assertThat( Fine.retrieveFine( actualParkTime ), is(42.0) );
 	}
 	
 	@Test
@@ -116,6 +122,7 @@ public class TestFineClass {
 		for( int i = 0; i < unexpectedFines.length; i++ ) {
 			assertNotEquals( unexpectedFines[ i ], Fine.retrieveFine( actualParkTime ) );
 		}
+		assertThat( Fine.retrieveFine( actualParkTime ), is(57.0) );
 	}
 	
 	@Test
@@ -129,14 +136,17 @@ public class TestFineClass {
 									//Calculate actual parking time
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to no overstay
 		assertNotEquals( unexpectedFine1, Fine.retrieveFine( actualParkTime ) );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(0.0) );
 		
 		finish = timestamp.getTime() + Time.valueOf( "01:00:00" ).getTime();
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 0 minutes overstay
 		assertNotEquals( unexpectedFine1, Fine.retrieveFine( actualParkTime ), 1 );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(0.0) );
 		
 		finish = timestamp.getTime() + Time.valueOf( "01:00:01" ).getTime();
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 1 second overstay - mean system Y___Y
 		assertNotEquals( unexpectedFine2, Fine.retrieveFine( actualParkTime ), 1 );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(12.0) );
 	}
 	
 	@Test
@@ -150,10 +160,12 @@ public class TestFineClass {
 									//Calculate actual parking time
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates 29 minutes 59 seconds overstay
 		assertNotEquals( unexpectedFine1, Fine.retrieveFine( actualParkTime ) );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(12.0) );
 		
 		finish = timestamp.getTime() + Time.valueOf( "01:30:00" ).getTime();
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 30 minutes overstay
 		assertNotEquals( unexpectedFine2, Fine.retrieveFine( actualParkTime ), 1 );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(15.0) );
 	}
 	
 	@Test
@@ -167,10 +179,12 @@ public class TestFineClass {
 									//Calculate actual parking time
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 59 minutes overstay
 		assertNotEquals( unexpectedFine1, Fine.retrieveFine( actualParkTime ) );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(15.0) );
 		
 		finish = timestamp.getTime() + Time.valueOf( "02:00:00" ).getTime();
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 1 hour overstay
 		assertNotEquals( unexpectedFine2, Fine.retrieveFine( actualParkTime ), 1 );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(21.0) );
 	}
 	
 	@Test
@@ -184,10 +198,12 @@ public class TestFineClass {
 									//Calculate actual parking time
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 1:59:59 overstay
 		assertNotEquals( unexpectedFine1, Fine.retrieveFine( actualParkTime ) );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(21.0) );
 		
 		finish = timestamp.getTime() + Time.valueOf( "03:00:00" ).getTime();
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 2 hours overstay
 		assertNotEquals( unexpectedFine2, Fine.retrieveFine( actualParkTime ), 1 );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(30.0) );
 	}
 	
 	@Test
@@ -201,10 +217,12 @@ public class TestFineClass {
 									//Calculate actual parking time
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 3:59:59 overstay
 		assertNotEquals( unexpectedFine1, Fine.retrieveFine( actualParkTime ) );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(30.0) );
 		
 		finish = timestamp.getTime() + Time.valueOf( "05:00:00" ).getTime();
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 4 hours overstay
 		assertNotEquals( unexpectedFine2, Fine.retrieveFine( actualParkTime ), 1 );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(42.0) );
 	}
 	
 	@Test
@@ -218,9 +236,11 @@ public class TestFineClass {
 									//Calculate actual parking time
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 5:59:59 overstay
 		assertNotEquals( unexpectedFine1, Fine.retrieveFine( actualParkTime ) );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(42.0) );
 		
 		finish = timestamp.getTime() + Time.valueOf( "07:00:00" ).getTime();
 		actualParkTime = ( finish - start ) - freeParking; //Evaluates to 6 hours overstay
 		assertNotEquals( unexpectedFine2, Fine.retrieveFine( actualParkTime ), 1 );
+		assertThat( Fine.retrieveFine( actualParkTime ), is(57.0) );
 	}
 }
